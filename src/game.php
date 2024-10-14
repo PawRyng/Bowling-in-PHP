@@ -28,7 +28,7 @@ class Game {
      * Dodaje do tablicy rzuty z ostatniej rundy oraz waliduje wartości
      * @param int $pins - Liczba przewróconych kręgli
      * @param int $index - index z tabeli w table_of_throw
-     * @return  bool || string - Zwraca true gdy ilość $pins jest poprawna lub stringa z wiadomością o błędzie
+     * @return  bool || string - Zwraca true gdy ilość $pins jest poprawna oraz została dodana do tablicy lub stringa z wiadomością o błędzie
      */
     public function setPinsInLastRound($pins, $index){
         $table_of_throw = $this->table_of_throw;
@@ -46,7 +46,7 @@ class Game {
                         return true;
                     }
                     else{
-                        return "za duża suma ";
+                        return "Suma jest za duża";
                     }
                 }
                 elseif($table_of_throw[$index][$drow_count - 1] + $pins <= 10){
@@ -55,7 +55,7 @@ class Game {
 
                 }
                 else{
-                    return "\n za duża suma w 2 rzucie! \n \n";                
+                    return "\n Za duża suma w 2 rzucie! \n \n";                
 
                 }
             }

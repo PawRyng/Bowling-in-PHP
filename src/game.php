@@ -38,7 +38,7 @@ class Game {
 
             if(isset($table_of_throw[$index][$drow_count - 1]) && $table_of_throw[$index][$drow_count - 1] < 10){
                 if($table_of_throw[$index][0] < 10){
-                    if(array_sum($table_of_throw[$index]) === 10)
+                    if(array_sum($table_of_throw[$index]) === 10){
                         $this->checkDefaultInputs($pins, $index);
                     }
                     else if(array_sum($table_of_throw[$index]) + $pins <= 10){

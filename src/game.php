@@ -1,16 +1,16 @@
 <?php
 
 class Game {
-    public $table_of_draw;
+    public $table_of_throw;
     
     public function __construct($table_draws = []){
-        $this->table_of_draw = $table_draws;
+        $this->table_of_throw = $table_draws;
     }
 
     /**
      * Sprawdza input wejścia musi być mniejszy niż 10 i większy niż 0
      * @param int $pins - Liczba przewróconych kręgli
-     * @param int $index - index z tabeli w table_of_draw
+     * @param int $index - index z tabeli w table_of_throw
      * @return  bool || string - Zwraca true gdy ilość $pins jest poprawna lub stringa z wiadomością o błędzie
      */
     private function checkDefaultInputs($pins, $index){
@@ -24,18 +24,24 @@ class Game {
     }
 
 
+    /**
+     * Dodaje do tablicy rzuty z ostatniej rundy oraz waliduje wartości
+     * @param int $pins - Liczba przewróconych kręgli
+     * @param int $index - index z tabeli w table_of_throw
+     * @return  bool || string - Zwraca true gdy ilość $pins jest poprawna lub stringa z wiadomością o błędzie
+     */
     public function setPinsInLastRound($pins, $index){
-        $table_of_draw = $this->table_of_draw;
-        if(!empty($table_of_draw[$index])){
+        $table_of_throw = $this->table_of_throw;
+        if(!empty($table_of_throw[$index])){
 
-            $drow_count = count($table_of_draw[$index]);
+            $drow_count = count($table_of_throw[$index]);
 
-            if(isset($table_of_draw[$index][$drow_count - 1]) && $table_of_draw[$index][$drow_count - 1] < 10){
-                if($table_of_draw[$index][0] < 10){
-                    if(array_sum($table_of_draw[$index]) === 10)
+            if(isset($table_of_throw[$index][$drow_count - 1]) && $table_of_throw[$index][$drow_count - 1] < 10){
+                if($table_of_throw[$index][0] < 10){
+                    if(array_sum($table_of_throw[$index]) === 10)
                         $this->checkDefaultInputs($pins, $index);
                     }
-                    else if(array_sum($table_of_draw[$index]) + $pins <= 10){
+                    else if(array_sum($table_of_throw[$index]) + $pins <= 10){
                         $this->roll($pins, $index);
                         return true;
                     }
@@ -43,7 +49,7 @@ class Game {
                         return "za duża suma ";
                     }
                 }
-                elseif($table_of_draw[$index][$drow_count - 1] + $pins <= 10){
+                elseif($table_of_throw[$index][$drow_count - 1] + $pins <= 10){
                     $this->roll($pins, $index);
                     return true;                
 
@@ -65,7 +71,7 @@ class Game {
     // sprawdza a na końcu dodaje
     public function setPins($pins, $index) {
         if($pins <= 10 && $pins >= 0){
-            if((isset($this->table_of_draw[$index][0]) && $this->table_of_draw[$index][0] + $pins <=10) || !isset($this->table_of_draw[$index][0])){
+            if((isset($this->table_of_throw[$index][0]) && $this->table_of_throw[$index][0] + $pins <=10) || !isset($this->table_of_throw[$index][0])){
                 $this->roll($pins, $index);
                 return true;
             }
@@ -82,7 +88,7 @@ class Game {
     }
     // dodawanie bil do tablicy
     private function roll($pins, $index) {
-        $this->table_of_draw[$index][] = $pins;
+        $this->table_of_throw[$index][] = $pins;
     }
 
     
@@ -97,7 +103,7 @@ class Game {
         return $throws;
     }
     private function isStrike($actual_round){
-        if(!empty($this->table_of_draw[$actual_round]) && in_array(10, $this->table_of_draw[$actual_round]))  {
+        if(!empty($this->table_of_throw[$actual_round]) && in_array(10, $this->table_of_throw[$actual_round]))  {
             return true;
         }
         else{
@@ -105,7 +111,7 @@ class Game {
         }
     }
     private function isSpare($actual_round){
-        if(!empty($this->table_of_draw[$actual_round]) && array_sum($this->table_of_draw[$actual_round]) === 10) {
+        if(!empty($this->table_of_throw[$actual_round]) && array_sum($this->table_of_throw[$actual_round]) === 10) {
             return true;
         }
         else{
@@ -123,8 +129,8 @@ class Game {
             }
         }
         else{
-            if(!empty($this->table_of_draw)){
-                foreach($this->table_of_draw as $round){
+            if(!empty($this->table_of_throw)){
+                foreach($this->table_of_throw as $round){
                     if(in_array(10, $round) || array_sum($round) === 10){
                         return true;
                     }
@@ -138,8 +144,8 @@ class Game {
     public function calculateScore() {
         $score = [];
 
-        if(!empty($this->table_of_draw)){
-            foreach($this->table_of_draw as $index => $round){
+        if(!empty($this->table_of_throw)){
+            foreach($this->table_of_throw as $index => $round){
                 $points = 0;
                 if($this->isStrike($index)){
                    $points = $this->strikePointsSum($index);
@@ -173,36 +179,36 @@ class Game {
         $points = 10;
 
         // sprawdzan czy w kolejnej rundzie 
-        if(isset($this->table_of_draw[$index + 1]) && $this->table_of_draw[$index + 1][0] === 10){
-            $points += $this->table_of_draw[$index + 1][0];
+        if(isset($this->table_of_throw[$index + 1]) && $this->table_of_throw[$index + 1][0] === 10){
+            $points += $this->table_of_throw[$index + 1][0];
 
             // sprawdza czy 2 tura istneje jak nie to sprawdza czy jest 3 tura w aktualnym dla ostatniej tury
-            if(isset($this->table_of_draw[$index + 2])){
-                $points += $this->table_of_draw[$index + 2][0];
+            if(isset($this->table_of_throw[$index + 2])){
+                $points += $this->table_of_throw[$index + 2][0];
             }
-            elseif(isset($this->table_of_draw[$index + 1][1])){
-                $points += $this->table_of_draw[$index + 1][1];
+            elseif(isset($this->table_of_throw[$index + 1][1])){
+                $points += $this->table_of_throw[$index + 1][1];
             }
         }
         else{
             // sprawdzić dla ostatniej rundy
-            if(isset($this->table_of_draw[$index + 1])){
-                $points += array_sum($this->table_of_draw[$index + 1]);// żle
+            if(isset($this->table_of_throw[$index + 1])){
+                $points += array_sum($this->table_of_throw[$index + 1]);// żle
             }
             else{
-                $points = array_sum($this->table_of_draw[$index]);// żle
+                $points = array_sum($this->table_of_throw[$index]);// żle
             }
         }
         return $points;
     }
     private function sparePointsSum($index){
         $points = 10;
-        if(isset($this->table_of_draw[$index + 1][0])){
-            $points += $this->table_of_draw[$index + 1][0];
+        if(isset($this->table_of_throw[$index + 1][0])){
+            $points += $this->table_of_throw[$index + 1][0];
         }
         // test dla 10 rundy
-        elseif(isset($this->table_of_draw[$index][2])){
-            $points += $this->table_of_draw[$index][2];
+        elseif(isset($this->table_of_throw[$index][2])){
+            $points += $this->table_of_throw[$index][2];
         }
 
         return $points;

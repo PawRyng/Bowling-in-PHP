@@ -7,10 +7,6 @@ class Game {
         $this->table_of_draw = $table_draws;
     }
 
-    public function getTableOfDraws() {
-        return $this->table_of_draw;
-    }
-    // nie działa
     public function setPinsInLastRound($pins, $index){
         $table_of_draw = $this->table_of_draw;
         if(!empty($table_of_draw[$index])){

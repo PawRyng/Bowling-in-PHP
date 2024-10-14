@@ -7,6 +7,23 @@ class Game {
         $this->table_of_draw = $table_draws;
     }
 
+    /**
+     * Sprawdza input wejścia musi być mniejszy niż 10 i większy niż 0
+     * @param int $pins - Liczba przewróconych kręgli
+     * @param int $index - index z tabeli w table_of_draw
+     * @return  bool || string - Zwraca true gdy ilość $pins jest poprawna lub stringa z wiadomością o błędzie
+     */
+    private function checkDefaultInputs($pins, $index){
+        if($pins >=0 && $pins <= 10){
+            $this->roll($pins, $index);
+            return true;
+        }
+        else{
+            return "Podana liczba musi być większa niż o i mniejsza niż 10";
+        }  
+    }
+
+
     public function setPinsInLastRound($pins, $index){
         $table_of_draw = $this->table_of_draw;
         if(!empty($table_of_draw[$index])){
@@ -15,8 +32,8 @@ class Game {
 
             if(isset($table_of_draw[$index][$drow_count - 1]) && $table_of_draw[$index][$drow_count - 1] < 10){
                 if($table_of_draw[$index][0] < 10){
-                    if(array_sum($table_of_draw[$index]) === 10){
-                        goto Normal;
+                    if(array_sum($table_of_draw[$index]) === 10)
+                        $this->checkDefaultInputs($pins, $index);
                     }
                     else if(array_sum($table_of_draw[$index]) + $pins <= 10){
                         $this->roll($pins, $index);
@@ -37,18 +54,11 @@ class Game {
                 }
             }
             else{
-                goto Normal;
+                $this->checkDefaultInputs($pins, $index);
             }
         }
         else{
-            Normal:
-            if($pins >=0 && $pins <= 10){
-                $this->roll($pins, $index);
-                return true;
-            }
-            else{
-                return "error";
-            }      
+            $this->checkDefaultInputs($pins, $index);
         }
     }
 

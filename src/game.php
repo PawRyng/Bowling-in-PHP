@@ -68,7 +68,13 @@ class Game {
         }
     }
 
-    // sprawdza a na końcu dodaje
+     /**
+     * 
+     * Waliduje input a następnie dodaje do tablicy rzuty
+     * @param int $pins - Liczba przewróconych kręgli
+     * @param int $index - index z tabeli w table_of_throw
+     * @return  bool || string - Zwraca true gdy ilość $pins jest poprawna oraz została dodana do tablicy lub stringa z wiadomością o błędzie
+     */
     public function setPins($pins, $index) {
         if($pins <= 10 && $pins >= 0){
             if((isset($this->table_of_throw[$index][0]) && $this->table_of_throw[$index][0] + $pins <=10) || !isset($this->table_of_throw[$index][0])){
@@ -86,22 +92,36 @@ class Game {
             return "Ilość musi być mniejsza niż 10 \n \n";
         }
     }
-    // dodawanie bil do tablicy
+
+
+     /**
+     * Dodaje do tablicy ilość przewróconych kręgli do tablicy
+     * @param int $pins - Liczba przewróconych kręgli
+     * @param int $index - index z tabeli w table_of_throw
+     */
     private function roll($pins, $index) {
         $this->table_of_throw[$index][] = $pins;
     }
 
-    
-    // zwraca ile rzutów jest do zrobienia w danej rundzie
+    /**
+     * Zwraca ile rzutów jest do zrobienia w danej rundzie
+     * @param int $round - Aktualna runda
+     */
     public function getThrows($round) {
         $throws = 2;
 
-        if($round ===9 && $this->isStrikeOrSprite()){
+        if($round === 9 && $this->isStrikeOrSprite()){
             $throws = 3;
         }
 
         return $throws;
     }
+
+    /**
+     * Sprawdza czy w aktualnej rundzie wystąpił Strike
+     * @param int $actual_round - Aktualna runda
+     * @return bool
+     */
     private function isStrike($actual_round){
         if(!empty($this->table_of_throw[$actual_round]) && in_array(10, $this->table_of_throw[$actual_round]))  {
             return true;
@@ -110,6 +130,12 @@ class Game {
             return false;
         }
     }
+
+    /**
+     * Sprawdza czy w aktualnej rundzie wystąpił Spare
+     * @param int $actual_round - Aktualna runda
+     * @return bool
+     */
     private function isSpare($actual_round){
         if(!empty($this->table_of_throw[$actual_round]) && array_sum($this->table_of_throw[$actual_round]) === 10) {
             return true;
@@ -119,6 +145,11 @@ class Game {
         }
     }
 
+    /**
+     * Sprawdza czy w aktualnej rundzie wystąpił Spare lub Strike
+     * @param int $actual_round - Aktualna runda
+     * @return bool
+     */
     public function isStrikeOrSprite($actual_round = null){
         if($actual_round){
             if ($actual_round < 9 && ($this->isStrike($actual_round) || $this->isSpare($actual_round)) )  {
@@ -141,6 +172,11 @@ class Game {
         }
     }
     
+
+    /**
+     * Wylicza ilość punktów w danej rundzie
+     * @return array - Tablica z punktami, indeks tablicy odpowiada rundzie - 1 
+     */
     public function calculateScore() {
         $score = [];
 
@@ -163,6 +199,11 @@ class Game {
         }
         return $score;
     }
+
+    /**
+     * Wyświetla wynik całej gry oraz poszczególnych rund
+     * @return string - Informacja o ilości punktów w poszczególnych rundach oraz wynik całościowy 
+     */
     public function getScore() {
         $score_array = $this->calculateScore();
         $text_to_display = "";
@@ -175,6 +216,11 @@ class Game {
         return $text_to_display."\n \n Wynik: $total_score \n \n \n";
     }
 
+    /**
+     * Wylicza ile punktów jest gry w rundzie występuje strike 
+     * @param int $index - index z tabeli w table_of_throw
+     * @return int - Ilość punktów dla rundy która jest strike
+     */
     private function strikePointsSum($index){
         $points = 10;
 
@@ -201,6 +247,11 @@ class Game {
         }
         return $points;
     }
+    /**
+     * Wylicza ile punktów jest gry w rundzie występuje spare 
+     * @param int $index - index z tabeli w table_of_throw
+     * @return int - Ilość punktów dla rundy która jest spare
+     */
     private function sparePointsSum($index){
         $points = 10;
         if(isset($this->table_of_throw[$index + 1][0])){

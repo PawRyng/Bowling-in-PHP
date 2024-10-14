@@ -153,6 +153,3 @@ class Tests {
         return $output_text;
     }
 }
-
-$test = new Tests();
-echo $test->singleTest(2);

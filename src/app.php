@@ -33,7 +33,7 @@ for ($round = 0; $round <= 9; $round++) {
             $throw++;
         }
         else{
-            echo $setPins."testtt";
+            echo $setPins;
         }
     }
 }

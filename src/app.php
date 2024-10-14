@@ -3,10 +3,9 @@
 require_once 'game.php';
 
 $game = new Game();
-// $table_of_draw = [];
 
 for ($round = 0; $round <= 9; $round++) {
-    echo "Runda: " . ($round + 1)."\n \n";
+    echo "Runda: " . ($round + 1)."\n";
     
 
     $throw = 1;
@@ -20,7 +19,7 @@ for ($round = 0; $round <= 9; $round++) {
             $throws = $game->getThrows($round);
         }
         
-        echo "Podaj liczbę strąconych kregli: ";
+        echo "Podaj liczbę przewróconych kręgli: ";
         $pins = fgets(STDIN);
         $pins = (int)trim($pins);
         if($round === 9){

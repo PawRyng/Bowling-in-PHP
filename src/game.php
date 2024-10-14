@@ -19,7 +19,7 @@ class Game {
             return true;
         }
         else{
-            return "Podana liczba musi być większa niż o i mniejsza niż 10";
+            return "Podana liczba musi być większa niż o i mniejsza niż 10 \n";
         }  
     }
 
@@ -39,14 +39,14 @@ class Game {
             if(isset($table_of_throw[$index][$drow_count - 1]) && $table_of_throw[$index][$drow_count - 1] < 10){
                 if($table_of_throw[$index][0] < 10){
                     if(array_sum($table_of_throw[$index]) === 10){
-                        $this->checkDefaultInputs($pins, $index);
+                        return $this->checkDefaultInputs($pins, $index);
                     }
                     else if(array_sum($table_of_throw[$index]) + $pins <= 10){
                         $this->roll($pins, $index);
                         return true;
                     }
                     else{
-                        return "Suma jest za duża";
+                        return "Suma jest za duża \n";
                     }
                 }
                 elseif($table_of_throw[$index][$drow_count - 1] + $pins <= 10){
@@ -60,11 +60,11 @@ class Game {
                 }
             }
             else{
-                $this->checkDefaultInputs($pins, $index);
+                return $this->checkDefaultInputs($pins, $index);
             }
         }
         else{
-            $this->checkDefaultInputs($pins, $index);
+            return $this->checkDefaultInputs($pins, $index);
         }
     }
 
